@@ -42,3 +42,4 @@ def challenge():
         game_id = str(uuid.uuid4())    
     last_player[game_id] = opponent
     return "", 201
+
