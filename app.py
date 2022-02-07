@@ -20,10 +20,10 @@ def move(ws):
     
     while True:
         move = ws.receive()
-        if last_player[game_id] ==  challenger:
-            return "Error"
+        if last_player[uid] ==  challenger:
+            return "Error",400
         
-        last_player[game_id] = challenger
+        last_player[uid] = challenger
         opponent = game_map[challenger]
         websocket_pool[opponent].send(move)
         return "", 200
