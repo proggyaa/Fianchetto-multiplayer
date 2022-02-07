@@ -1,4 +1,6 @@
 import socketserver
+import uuid
+import game_players
 from flask import Flask, request, render_template
 from flask_sock import Sock
 
@@ -6,20 +8,26 @@ app = Flask(__name__)
 sock = Sock(app)
 websocket_pool = dict()
 game_map = dict()
+last_player = dict()
 
 if __name__ == "__main__":
     app.run()
 
-
 @sock.route("/play")
-def check(ws):
+def move(ws):
     challenger = request.args.get("player")
+    uid = request.args.get("gameId")
     websocket_pool[challenger] = ws
+    
     while True:
         move = ws.receive()
+        if last_player[game_id] ==  challenger:
+            return "Error"
+        
+        last_player[game_id] = challenger
         opponent = game_map[challenger]
         websocket_pool[opponent].send(move)
-    return "", 200
+        return "", 200
 
 
 @app.route("/challenge")
@@ -28,6 +36,8 @@ def challenge():
     opponent = request.args.get("opponent_username")
     if opponent in game_map or challenger in game_map:
         return "Can't start a new game! One player is already playing a game", 400
-    game_map[challenger] = opponent
-    game_map[opponent] = challenger
+    
+    global game_id
+    game_id = str(uuid.uuid4())
+    last_player[game_id] = opponent
     return "", 201
