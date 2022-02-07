@@ -8,7 +8,6 @@ sock = Sock(app)
 websocket_pool = dict()
 game_map = dict()
 last_player = dict()
-existing_game_ids = dict()
 
 if __name__ == "__main__":
     app.run()
@@ -39,7 +38,7 @@ def challenge():
     
     global game_id
     game_id = str(uuid.uuid4())
-    while game_id in existing_game_ids:
+    while game_id in last_player:
         game_id = str(uuid.uuid4())    
     last_player[game_id] = opponent
     return "", 201
