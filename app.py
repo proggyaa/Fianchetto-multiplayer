@@ -24,7 +24,7 @@ db = database.Manager(mysql=mysql)
 
 @sock.route("/play")
 def move(ws):
-    challenger,white,black = request.json["challenger", "white", "black"]
+    challenger,white,black = request.json["challenger"],request.json["white"],request.json["black"]
     uid = request.args.get("gameId")
     websocket_pool[challenger] = ws
     
