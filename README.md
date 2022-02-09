@@ -10,9 +10,18 @@ Request :-
 {
     username : "challenger_username"
 }
-```
-```
-2. play?player=<username> [ws/wss]
 
-// Every time a new move is made, the move data is sent through this websocket
+Result - unique_game_id
+```
+```
+2. play?player=<username>&game_id=<unique_game_id> [ws/wss]
+
+Request :- 
+{
+    challenger : "challenger_username",
+
+}
+
+
+// Every time a new move is made, the [move, outcome] data is sent through this websocket
 ```
