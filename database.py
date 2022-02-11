@@ -12,6 +12,7 @@ class Manager:
             '''CREATE TABLE IF NOT EXISTS game_moves(uid VARBINARY(30),moves VARCHAR(5))''')
         cursor.close()
         conn.close()
+        # FIX VARCHAR LENGTHS
 
     def store_moves(self, uid, move):
         conn = self.mysql.connect()

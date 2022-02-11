@@ -1,13 +1,10 @@
-from tkinter import EXCEPTION
-from werkzeug.exceptions import HTTPException
-import socketserver
 import uuid
 import flask
-from flaskext.mysql import MySQL
+# from flaskext.mysql import MySQL
 from flask import Response, make_response
 from flask import Flask, request
 from flask_sock import Sock
-import database
+# import database
 
 app = Flask(__name__)
 sock = Sock(app)
@@ -18,19 +15,19 @@ last_player = dict()
 if __name__ == "__main__":
     app.run()
 
-mysql = MySQL()
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = ''
-app.config['MYSQL_DATABASE_DB'] = 'fianchetto'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql.init_app(app)
-db = database.Manager(mysql)
+# mysql = MySQL()
+# app.config['MYSQL_DATABASE_USER'] = 'root'
+# app.config['MYSQL_DATABASE_PASSWORD'] = ''
+# app.config['MYSQL_DATABASE_DB'] = 'fianchetto'
+# app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+# mysql.init_app(app)
+# db = database.Manager(mysql)
 
 
 @sock.route("/play")
 def move(ws):
-    challenger, white, black = request.args.get(
-        "challenger"), request.args.get("white"), request.args.get("black")
+    challenger = request.args.get(
+        "challenger")
     uid = request.args.get("game_id")
     websocket_pool[challenger] = ws
     outcome = 'NO'

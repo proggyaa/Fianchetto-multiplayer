@@ -1,3 +1,10 @@
+socketserver
 uuid
 flask
 flask_sock
+
+socketserver == 0.4F
+uuid == 1.30
+flask == 2.0.2
+flask_sock == 0.4.0
+
