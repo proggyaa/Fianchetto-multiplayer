@@ -1,6 +1,7 @@
 uuid
 flask
 flask_sock
+gunicorn
 
 uuid == 1.30
 flask == 2.0.2
