@@ -1,7 +1,10 @@
-from operator import le
+from tkinter import EXCEPTION
+from werkzeug.exceptions import HTTPException
 import socketserver
 import uuid
+import flask
 from flaskext.mysql import MySQL
+from flask import Response, make_response
 from flask import Flask, request
 from flask_sock import Sock
 import database
@@ -34,10 +37,10 @@ def move(ws):
 
     while True:
         move, outcome = ws.receive().split(" ")
-        if last_player[uid] == challenger:
-            return "Error", 400
+        # if last_player[uid] == challenger:
+        #     return "Error", 400
 
-        db.store_moves(uid, move)
+        # db.store_moves(uid, move)
         last_player[uid] = challenger
         opponent = game_map[challenger]
 
@@ -47,19 +50,43 @@ def move(ws):
 
     del game_map[challenger]
     del game_map[opponent]
-    db.store_outcome(uid, white, black, outcome)
+    # db.store_outcome(uid, white, black, outcome)
     return "", 200
+
+'''
+Dummy endpoint for testing websocket interactiveness
+'''
+# chat_db = dict()
+
+
+# @sock.route("/chat")
+# def move(ws):
+#     sender = request.args.get('sender')
+#     id = request.args.get('id')
+#     if id not in chat_db:
+#         chat_db[id] = []
+#     chat_db[id].append(ws)
+#     while True:
+#         msg = ws.receive()
+#         for chat_ws in chat_db[id]:
+#             chat_ws.send(sender + " : " + msg)
+#     return "", 200
 
 
 @app.route("/challenge")
 def challenge():
-    challenger = request.json["username"]
+    challenger = request.args.get("username")
     opponent = request.args.get("opponent_username")
     if opponent in game_map or challenger in game_map:
-        return "Can't start a new game! One player is already playing a game", 400
+        resp = make_response(
+            "Can't start a new game! One player is already playing a game")
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+        return resp, 400
 
     game_map[opponent] = challenger
     game_map[challenger] = opponent
-    game_id = str(uuid.uuid4())[:30]
+    game_id = str(uuid.uuid4())
     last_player[game_id] = opponent
-    return game_id, 201
+    resp = flask.Response(game_id)
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp, 201
