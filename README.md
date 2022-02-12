@@ -15,3 +15,7 @@ Result - unique_game_id
 
 // Every time a new move is made, the [move] data is sent through this websocket
 ```
+```
+3.make-move?game_id=<unique_game_id>&player=<player_username>&move=<move_by_player>
+
+4.get-opponent-move?game_id=<unique_game_id>&player=<player_username>
