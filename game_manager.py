@@ -12,6 +12,8 @@ class Game_Manager:
         opponent = Player(name=opponent_name, ws_connection=None)
         uid = str(uuid.uuid4())
         game = Game(uid, challenger, opponent)
+        print("DEBUG game", game)
+        print("DEBUG game map", self.game_map)
         self.game_map[uid] = game
         return uid
 
