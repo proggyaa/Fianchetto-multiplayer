@@ -1,5 +1,4 @@
 import uuid
-from sqlalchemy import null
 from game import Game
 from player import Player
 
@@ -9,8 +8,8 @@ class Game_Manager:
         self.game_map = dict()
 
     def start_game(self, challenger_name: str, opponent_name: str) -> str:
-        challenger = Player(name=challenger_name, ws_connection=null)
-        opponent = Player(name=opponent_name, ws_connection=null)
+        challenger = Player(name=challenger_name, ws_connection=None)
+        opponent = Player(name=opponent_name, ws_connection=None)
         uid = str(uuid.uuid4())
         game = Game(uid, challenger, opponent)
         self.game_map[uid] = game
