@@ -15,14 +15,17 @@ class Game_Manager:
         game = Game(uid, challenger, opponent)
         self.game_map[uid] = game
         return uid
-    
-    def establish_connection(self, uid : str, player: str, ws_connection):
+
+    def establish_connection(self, uid: str, player: str, ws_connection):
         game = self.game_map[uid]
         if game.challenger.name == player:
             game.challenger.ws_connection = ws_connection
         else:
             game.opponent.ws_connection = ws_connection
 
-    
-    def make_move(self, uid: str, move: str, player: str):
-        self.game_map[uid].move(move, player)
+    def make_move(self, uid: str, move: str, outcome: str, player: str):
+        self.game_map[uid].move(move, outcome, player)
+
+    def end_game(self, uid: str):
+        self.game_map[uid].end()
+        del self.game_map[uid]

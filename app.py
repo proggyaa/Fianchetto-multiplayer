@@ -14,7 +14,6 @@ if __name__ == "__main__":
     app.run()
 
 
-
 @sock.route("/play")
 def move(ws):
     player = request.args.get("player")
@@ -24,8 +23,10 @@ def move(ws):
     while True:
         move, outcome = ws.receive().split(" ")
         if outcome != 'NO':
+            game_manager.make_move(uid, move, outcome, player)
+            game_manager.end_game(uid)
             break
-        game_manager.make_move(uid, move, player)
+        game_manager.make_move(uid, move, outcome, player)
     return "", 200
 
 
