@@ -13,6 +13,7 @@ class Game_Manager:
         uid = str(uuid.uuid4())
         game = Game(uid, challenger, opponent)
         self.game_map[uid] = game
+        print("DEBUG game map after starting = ",self.game_map," uid", uid)
         return uid
 
     def establish_connection(self, uid: str, player: str, ws_connection):
@@ -27,5 +28,6 @@ class Game_Manager:
         self.game_map[uid].move(move, outcome, player)
 
     def end_game(self, uid: str):
+        print("DEBUG ending game for", uid)
         self.game_map[uid].end()
         del self.game_map[uid]
