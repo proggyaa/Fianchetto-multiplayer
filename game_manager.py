@@ -1,0 +1,28 @@
+import uuid
+from sqlalchemy import null
+from game import Game
+from player import Player
+
+
+class Game_Manager:
+    def __init__(self) -> None:
+        self.game_map = dict()
+
+    def start_game(self, challenger_name: str, opponent_name: str) -> str:
+        challenger = Player(name=challenger_name, ws_connection=null)
+        opponent = Player(name=opponent_name, ws_connection=null)
+        uid = str(uuid.uuid4())
+        game = Game(uid, challenger, opponent)
+        self.game_map[uid] = game
+        return uid
+    
+    def establish_connection(self, uid : str, player: str, ws_connection):
+        game = self.game_map[uid]
+        if game.challenger.name == player:
+            game.challenger.ws_connection = ws_connection
+        else:
+            game.opponent.ws_connection = ws_connection
+
+    
+    def make_move(self, uid: str, move: str, player: str):
+        self.game_map[uid].move(move, player)

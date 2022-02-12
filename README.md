@@ -4,19 +4,14 @@
 
 ### Routes
 ```
-1. challenge?opponent_username=<op_username> [http/https]
-
-Request :- 
-{
-    username : "challenger_username"
-}
+1. challenge?username=<username>&opponent_username=<op_username> [http/https]
 
 Result - unique_game_id
 ```
 ```
-2. play?challenger=<challenger_username>&white=<white_player_username>&black=<black_player_username>&game_id=<unique_game_id> [ws/wss]
+2. play?player=<player_username>&game_id=<unique_game_id> [ws/wss]
 
 
 
-// Every time a new move is made, the [move, outcome] data is sent through this websocket
+// Every time a new move is made, the [move] data is sent through this websocket
 ```
