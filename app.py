@@ -1,3 +1,4 @@
+import uuid
 import flask
 from flask import Response
 from flask import Flask, request
@@ -14,31 +15,66 @@ if __name__ == "__main__":
     app.run()
 
 
-@sock.route("/play")
-def move(ws):
-    player = request.args.get("player")
-    uid = request.args.get("game_id")
-    outcome = 'NO'
-    game_manager.establish_connection(uid, player, ws)
-    while True:
-        move, outcome = ws.receive().split(" ")
-        if outcome != 'NO':
-            game_manager.make_move(uid, move, outcome, player)
-            game_manager.end_game(uid)
-            break
-        game_manager.make_move(uid, move, outcome, player)
-    return "", 200
+# @sock.route("/play")
+# def move(ws):
+#     player = request.args.get("player")
+#     uid = request.args.get("game_id")
+#     outcome = 'NO'
+#     game_manager.establish_connection(uid, player, ws)
+#     while True:
+#         move, outcome = ws.receive().split(" ")
+#         if outcome != 'NO':
+#             game_manager.make_move(uid, move, outcome, player)
+#             game_manager.end_game(uid)
+#             break
+#         game_manager.make_move(uid, move, outcome, player)
+#     return "", 200
 
+
+# @app.route("/challenge")
+# def challenge():
+#     challenger = request.args.get("username")
+#     opponent = request.args.get("opponent_username")
+#     game_id = game_manager.start_game(challenger, opponent)
+#     resp = flask.Response(game_id)
+#     resp.headers["Access-Control-Allow-Origin"] = "*"
+#     return resp, 201
+
+last_move_and_player = dict() #uid -> [last_move, player_who_made_last_move]
 
 @app.route("/challenge")
 def challenge():
     challenger = request.args.get("username")
     opponent = request.args.get("opponent_username")
-    game_id = game_manager.start_game(challenger, opponent)
+    game_id = str(uuid.uuid4())
+    last_move_and_player[game_id] = ["not_started", opponent]
     resp = flask.Response(game_id)
     resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp, 201
 
+
+@app.route("/get-opponent-move")
+def get_opponent_move():
+    uid = request.args.get("game_id")
+    curr_player = request.args.get("player")
+    if uid not in last_move_and_player:
+        return "No such game in progress", 401
+    if curr_player != last_move_and_player[uid][1]:
+        return last_move_and_player[uid][0], 200
+    return "", 400
+    
+
+@app.route("/make-move")
+def make_move():
+    uid = request.args.get("game_id")
+    curr_player = request.args.get("player")
+    move = request.args.get("move")
+    if uid not in last_move_and_player:
+        return "No such game in progress", 401
+    if curr_player == last_move_and_player[uid][1]:
+        return "Not your move",400
+    last_move_and_player[uid] = [move, curr_player]
+    return "", 200
 
 '''
 Dummy endpoint for testing websocket interactiveness
